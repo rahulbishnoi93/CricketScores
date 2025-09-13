@@ -9,6 +9,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -22,12 +23,16 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.rounded.Bolt
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.FiberManualRecord
+import androidx.compose.material.icons.rounded.PlayCircleFilled
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Schedule
 import androidx.compose.material.icons.rounded.SportsBaseball
 import androidx.compose.material.icons.rounded.SportsCricket
+import androidx.compose.material.icons.rounded.Title
+import androidx.compose.material.icons.rounded.WifiTethering
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
@@ -36,7 +41,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -62,6 +66,7 @@ import androidx.wear.compose.material3.lazy.TransformationSpec
 import androidx.wear.compose.material3.lazy.transformedHeight
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.material3.ButtonDefaults
@@ -158,8 +163,8 @@ fun MatchesGridScreen(
                 modifier =
                     Modifier.fillMaxWidth().transformedHeight(this, transformationSpec),
                 transformation = SurfaceTransformation(transformationSpec),
-                icon = Icons.Rounded.FiberManualRecord,
-                iconColor = MaterialTheme.colorScheme.onError, // 🔴 red for live
+                icon = Icons.Rounded.Bolt,
+                iconColor = Color.Red, // 🔴 red for live
                 labelText = "Live Matches",
                 subText = if (matches.isEmpty()) "No Live Matches" else null
             )
@@ -291,7 +296,7 @@ fun ScheduleCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Text(match.date, style = MaterialTheme.typography.bodySmall.copy(
+            Text(match.date, style = MaterialTheme.typography.bodyMedium.copy(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             ) )
@@ -306,21 +311,20 @@ fun ScheduleCard(
                         contentDescription = "${match.team1} flag",
                         modifier = Modifier.size(18.dp)
                     )
-                    Text(match.team1, style = MaterialTheme.typography.bodySmall)
+                    Text(match.team1, style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primaryDim,)
                 }
 
                 // VS text styling
                 Text(
-                    "VS",
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                    "VS", style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primaryDim,
                 )
 
                 // Team 2
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
-                    Text(match.team2, style = MaterialTheme.typography.bodySmall)
+                    Text(match.team2, style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primaryDim,)
                     Image(
                         painter = painterResource(TeamIconUtils.getTeamFlagIcon(match.team2)),
                         contentDescription = "${match.team2} flag",
@@ -332,10 +336,10 @@ fun ScheduleCard(
             // Match info styling
             Text(
                 match.details,
-                style = MaterialTheme.typography.bodySmall.copy(
-                    fontStyle = FontStyle.Italic,
-                    color = Color.Gray
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontStyle = FontStyle.Italic
                 ),
+                color = MaterialTheme.colorScheme.secondaryDim,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         }
@@ -351,8 +355,10 @@ fun RecentMatchCard(
 ) {
     AppCard(
         onClick = onClick,
-        appName = { Text(match.matchSummary, style = MaterialTheme.typography.bodyExtraSmall ) },
-        time = { Text("Recent", style = MaterialTheme.typography.bodyExtraSmall, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f) ) },
+        appName = { Text(match.matchSummary, style = MaterialTheme.typography.bodyExtraSmall,
+            color = MaterialTheme.colorScheme.primary, ) },
+        time = { Text("RECENT", style = MaterialTheme.typography.bodyExtraSmall,
+            color = MaterialTheme.colorScheme.secondaryDim, ) },
         title = { },
         modifier = modifier,
         transformation = transformation
@@ -367,15 +373,19 @@ fun RecentMatchCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(horizontalAlignment = Alignment.Start,
+                ) {
+                    Text(match.team1.team, style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primaryDim,
+                    )
                     Image(
                         painter = painterResource(TeamIconUtils.getTeamFlagIcon(match.team1.team)),
                         contentDescription = "${match.team1.team} flag",
                         modifier = Modifier.size(18.dp)
                     )
-                    Text(match.team1.team, style = MaterialTheme.typography.bodySmall)
                 }
-                Text(match.team1.score, style = MaterialTheme.typography.bodySmall)
+                Text(match.team1.score, style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary,)
             }
 
             // Team 2 row
@@ -384,19 +394,23 @@ fun RecentMatchCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(horizontalAlignment = Alignment.Start,) {
+                    Text(match.team2.team, style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primaryDim,
+                    )
                     Image(
                         painter = painterResource(TeamIconUtils.getTeamFlagIcon(match.team2.team)),
                         contentDescription = "${match.team2.team} flag",
                         modifier = Modifier.size(18.dp)
                     )
-                    Text(match.team2.team, style = MaterialTheme.typography.bodySmall)
                 }
-                Text(match.team2.score, style = MaterialTheme.typography.bodySmall)
+                Text(match.team2.score, style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary,)
             }
 
             // Result line
-            Text(match.result, style = MaterialTheme.typography.bodyExtraSmall)
+            Text(match.result, style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.secondary,)
         }
     }
 }
@@ -411,6 +425,7 @@ fun TextAppHeader(modifier: Modifier = Modifier, transformation: SurfaceTransfor
             modifier = modifier,
             textAlign = TextAlign.Center,
             text = heading,
+            color = MaterialTheme.colorScheme.primary,
         )
     }
 }
@@ -433,7 +448,7 @@ fun TextSubHeader(modifier: Modifier = Modifier,
                 modifier = Modifier
                     .size(16.dp)
                     .clip(CircleShape)
-                    .background(iconColor)
+                    .background( MaterialTheme.colorScheme.onBackground,)
                     .padding(3.dp)  // gives breathing room inside the circle
             )
         },
@@ -443,6 +458,7 @@ fun TextSubHeader(modifier: Modifier = Modifier,
                     modifier = modifier,
                     textAlign = TextAlign.Center,
                     text = labelText,
+                    color = MaterialTheme.colorScheme.primaryDim,
                 )
             }
         },
@@ -464,7 +480,7 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
     )
     // Pick one random message for this load
     val currentMessage = remember { messages.random() }
-
+//
 //    val infiniteTransition = rememberInfiniteTransition(label = "")
 //    val rotation = infiniteTransition.animateFloat(
 //        initialValue = 0f,
@@ -493,9 +509,8 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
 
         Text(
             text = currentMessage,
-            style = MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-            modifier = Modifier.padding(horizontal = 8.dp)
         )
     }
 }
@@ -551,8 +566,21 @@ fun MatchCard(
 ) {
     AppCard(
         onClick = onClick,
-        appName = { Text(match?.liveMatchSummary!!, style = MaterialTheme.typography.bodyExtraSmall ) }, // optional header
-        time = { Text("Live", style = MaterialTheme.typography.bodyExtraSmall, color = Color.Red.copy(alpha = 0.6f) ) },        // optional time (can remove if not needed)
+        appName = { Text(match?.liveMatchSummary!!, style = MaterialTheme.typography.bodyExtraSmall ,
+            color = MaterialTheme.colorScheme.primary,) }, // optional header
+        time = {
+            Box(
+                modifier = Modifier
+                    .background(Color.Red, RoundedCornerShape(4.dp))
+                    .padding(horizontal = 2.dp, vertical = 1.dp)
+            ) {
+                Text(
+                    text = "LIVE",
+                    style = MaterialTheme.typography.bodyExtraSmall,
+                    color = Color.White
+                )
+            }
+        },        // optional time (can remove if not needed)
         title = { },
         modifier = modifier,
         transformation = transformation
@@ -567,15 +595,17 @@ fun MatchCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(horizontalAlignment = Alignment.Start,){
+                    Text(match?.team1!!.team, style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primaryDim,)
                     Image(
                         painter = painterResource(TeamIconUtils.getTeamFlagIcon(match?.team1!!.team)),
                         contentDescription = "${match.team1.team} flag",
                         modifier = Modifier.size(18.dp)
                     )
-                    Text(match?.team1!!.team, style = MaterialTheme.typography.bodySmall)
                 }
-                Text(match?.team1!!.score, style = MaterialTheme.typography.bodySmall)
+                Text(match?.team1!!.score, style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary,)
             }
 
             // Team 2 row
@@ -584,15 +614,17 @@ fun MatchCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(horizontalAlignment = Alignment.Start,){
+                    Text(match?.team2!!.team, style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primaryDim,)
                     Image(
                         painter = painterResource(TeamIconUtils.getTeamFlagIcon(match?.team2!!.team)),
                         contentDescription = "${match?.team2!!.team} flag",
                         modifier = Modifier.size(18.dp)
                     )
-                    Text(match?.team2!!.team, style = MaterialTheme.typography.bodySmall)
                 }
-                Text(match?.team2!!.score, style = MaterialTheme.typography.bodySmall)
+                Text(match?.team2!!.score, style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary,)
             }
         }
     }
@@ -611,13 +643,11 @@ fun BatsmanScoreAppCard(
 
     AppCard(
         onClick = onClick,
-        appName = { Text(batter.name, color = MaterialTheme.colorScheme.primary) },
+        appName = { Text(batter.name, color = MaterialTheme.colorScheme.primaryDim) },
         time = {
-            Text(
-                batter.runs ?: "-",
-                style = MaterialTheme.typography.bodyExtraSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-            )
+            Text("SR: $formattedSr",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f))
         },
         title = { },
         modifier = modifier,
@@ -630,23 +660,24 @@ fun BatsmanScoreAppCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Runs: ${batter.runs ?: "-"}", fontSize = 12.sp)
-                Text("Balls: ${batter.balls ?: "-"}", fontSize = 12.sp)
+                Text("Runs: ${batter.runs ?: "-"}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary)
+                Text("Balls: ${batter.balls ?: "-"}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary)
             }
 
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Fours: ${batter.fours ?: "-"}", fontSize = 12.sp)
-                Text("Sixes: ${batter.sixes ?: "-"}", fontSize = 12.sp)
-            }
-
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("SR: $formattedSr", fontSize = 12.sp)
+                Text("Fours: ${batter.fours ?: "-"}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary)
+                Text("Sixes: ${batter.sixes ?: "-"}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary)
             }
         }
     }
@@ -663,13 +694,11 @@ fun BowlerScoreAppCard(
     } ?: "-"
     AppCard(
         onClick = onClick,
-        appName = { Text(bowler.name, color = MaterialTheme.colorScheme.primary) },
+        appName = { Text(bowler.name, color = MaterialTheme.colorScheme.primaryDim) },
         time = {
-            Text(
-                bowler.wickets ?: "-",
+            Text("Eco: $formattedEr",
                 style = MaterialTheme.typography.bodyExtraSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-            )
+                color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f))
         },
         title = { },
         modifier = modifier,
@@ -682,23 +711,24 @@ fun BowlerScoreAppCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Overs: ${bowler.overs ?: "-"}", fontSize = 12.sp)
-                Text("Maidens: ${bowler.maidens ?: "-"}", fontSize = 12.sp)
+                Text("Overs: ${bowler.overs ?: "-"}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary)
+                Text("Maidens: ${bowler.maidens ?: "-"}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary)
             }
 
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Runs: ${bowler.runs ?: "-"}", fontSize = 12.sp)
-                Text("Wickets: ${bowler.wickets ?: "-"}", fontSize = 12.sp)
-            }
-
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Econ: $formattedEr", fontSize = 12.sp)
+                Text("Runs: ${bowler.runs ?: "-"}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary)
+                Text("Wickets: ${bowler.wickets ?: "-"}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary)
             }
         }
     }
@@ -717,7 +747,25 @@ fun ResultsAppCard(
     AppCard(
         onClick = onClick,
         appName = { Text(match?.match_title!!, color = MaterialTheme.colorScheme.primary)  }, // optional header
-        time = { Text(statusText, style = MaterialTheme.typography.bodyExtraSmall )},        // optional time (can remove if not needed)
+        time = { if (statusText.equals("Live", ignoreCase = true)) {
+            Box(
+                modifier = Modifier
+                    .background(Color.Red, RoundedCornerShape(4.dp))
+                    .padding(horizontal = 2.dp, vertical = 1.dp)
+            ) {
+                Text(
+                    text = "LIVE",
+                    style = MaterialTheme.typography.bodyExtraSmall,
+                    color = Color.White
+                )
+            }
+        } else {
+            Text(
+                statusText,
+                style = MaterialTheme.typography.bodyExtraSmall,
+                color = MaterialTheme.colorScheme.secondaryDim
+            )
+        }},        // optional time (can remove if not needed)
         title = { },
         modifier = modifier,
         transformation = transformation
@@ -734,18 +782,20 @@ fun ResultsAppCard(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Column(horizontalAlignment = Alignment.Start,){
+                            Text(
+                                liveMatch?.team1!!.team,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.primaryDim
+                            )
                             Image(
                                 painter = painterResource(TeamIconUtils.getTeamFlagIcon(liveMatch?.team1!!.team)),
                                 contentDescription = "${liveMatch?.team1!!.team} flag",
                                 modifier = Modifier.size(18.dp)
                             )
-                            Text(
-                                liveMatch?.team1!!.team,
-                                style = MaterialTheme.typography.bodySmall
-                            )
                         }
-                        Text(liveMatch?.team1!!.score, style = MaterialTheme.typography.bodySmall)
+                        Text(liveMatch?.team1!!.score, style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.secondary )
                     }
 
                     // Team 2 row
@@ -754,18 +804,20 @@ fun ResultsAppCard(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Column(horizontalAlignment = Alignment.Start,){
+                            Text(
+                                liveMatch?.team2!!.team,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.primaryDim
+                            )
                             Image(
                                 painter = painterResource(TeamIconUtils.getTeamFlagIcon(liveMatch?.team2!!.team)),
                                 contentDescription = "${liveMatch?.team2!!.team} flag",
                                 modifier = Modifier.size(18.dp)
                             )
-                            Text(
-                                liveMatch?.team2!!.team,
-                                style = MaterialTheme.typography.bodySmall
-                            )
                         }
-                        Text(liveMatch?.team2!!.score, style = MaterialTheme.typography.bodySmall)
+                        Text(liveMatch?.team2!!.score, style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.secondary)
                     }
                 }
             } else if (recentMatch != null) {
@@ -785,9 +837,13 @@ fun ResultsAppCard(
                                 contentDescription = "${recentMatch.team1.team} flag",
                                 modifier = Modifier.size(18.dp)
                             )
-                            Text(recentMatch.team1.team, style = MaterialTheme.typography.bodySmall)
+                            Text(recentMatch.team1.team,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.primaryDim)
                         }
-                        Text(recentMatch.team1.score, style = MaterialTheme.typography.bodySmall)
+                        Text(recentMatch.team1.score,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.secondary)
                     }
 
                     // Team 2 row
@@ -802,43 +858,52 @@ fun ResultsAppCard(
                                 contentDescription = "${recentMatch.team2.team} flag",
                                 modifier = Modifier.size(18.dp)
                             )
-                            Text(recentMatch.team2.team, style = MaterialTheme.typography.bodySmall)
+                            Text(recentMatch.team2.team,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.primaryDim)
                         }
-                        Text(recentMatch.team2.score, style = MaterialTheme.typography.bodySmall)
+                        Text(recentMatch.team2.score,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.secondary)
                     }
                 }
             }
             if (match?.status != null){
                 HorizontalDivider(
                     modifier = Modifier.padding(vertical = 8.dp),
-                    thickness = 1.dp // line thickness
+                    thickness = 1.dp, // line thickness
+                    color = MaterialTheme.colorScheme.secondaryDim
                 )
-                Text(match?.status?: "", style = MaterialTheme.typography.bodySmall)
+                Text(match?.status?: "", style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary)
             }
 
             if(match?.player_of_the_match != null){
                 HorizontalDivider(
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    thickness = 1.dp // line thickness
+                    modifier = Modifier.padding(vertical = 8.dp), // line thickness
+                    color = MaterialTheme.colorScheme.secondaryDim
                 )
                 Column {
                     Text(
                         text = "Player of the Match:",
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.secondaryDim,
                     )
                     Text(
                         text = match?.player_of_the_match!!,
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.secondary,
                         fontWeight = FontWeight.Bold
                     )
                 }
             }
             if (match?.Livestatus != null){
                 HorizontalDivider(
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    thickness = 1.dp // line thickness
+                    modifier = Modifier.padding(vertical = 8.dp), // line thickness
+                    color = MaterialTheme.colorScheme.secondaryDim
                 )
-                Text(match?.Livestatus?: "", style = MaterialTheme.typography.bodySmall)
+                Text(match?.Livestatus?: "", style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary,)
             }
 
         }

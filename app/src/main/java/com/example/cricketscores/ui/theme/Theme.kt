@@ -33,11 +33,4 @@ fun WearAppTheme(
 
 
 
-@Composable
-fun CricketTheme(content: @Composable () -> Unit) {
-    MaterialTheme(
-        colorScheme = DarkColorScheme,
-        typography = CricketAppTypography,
-        content = content
-    )
-}
+

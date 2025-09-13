@@ -18,13 +18,12 @@ import androidx.wear.compose.navigation.composable
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import com.example.cricketscores.ui.screens.CricketUiState
 import com.example.cricketscores.ui.screens.MatchDetailScreen
-import com.example.cricketscores.ui.theme.CricketTheme
 
 @Composable
 fun CricketApp() {
     val cricketViewModel: CricketViewModel =
         viewModel(factory = CricketViewModel.Factory)
-    CricketTheme {
+    WearAppTheme {
         AppScaffold {
             val listState = rememberTransformingLazyColumnState()
             val transformationSpec = rememberTransformationSpec()

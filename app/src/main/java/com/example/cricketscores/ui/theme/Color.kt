@@ -24,16 +24,6 @@ val Purple700 = Color(0xFF3700B3)
 val Teal200 = Color(0xFF03DAC5)
 val Red400 = Color(0xFFCF6679)
 
-val WearAppColorPalette: ColorScheme = ColorScheme(
-    primary = Purple200,
-    primaryDim = Purple700,
-    secondary = Teal200,
-    secondaryDim = Teal200,
-    error = Red400,
-    onPrimary = Color.Black,
-    onSecondary = Color.Black,
-    onError = Color.Black
-)
 
 // Backgrounds
 val BackgroundPrimary = Color(0xFF121212)        // main app background
@@ -41,10 +31,11 @@ val BackgroundSecondary = Color(0xFF1E1E1E)      // slightly lighter for cards
 val BackgroundCardDetail = Color(0xFF232323)     // detail card slightly brighter
 
 // Text
-val TextPrimary = Color(0xFFFFFFFF)             // white for main text
-val TextSecondary = Color(0xFFB0B0B0)           // muted text
-val TextAccent = Color(0xFFFFC107)              // amber for scores, live status
-
+val heading = Color(0xFFFFFFFF)       // Pure white for main text
+val subheading = Color(0xFFCCCCCC)    // Light grey for secondary headings
+val light = Color(0xFF888888)         // Muted grey for less important text
+val accent = Color(0xFF4DD0E1)        // Amber/Gold for scores or LIVE tags
+val iconBackground = Color(0xFF3A3A3A)   // Medium grey, looks premium
 // Icons
 val IconPrimary = Color(0xFFFFFFFF)
 val IconSecondary = Color(0xFFB0B0B0)
@@ -56,18 +47,14 @@ val DividerColor = Color(0xFF333333)
 // Live Match Tag
 val LiveMatchRed = Color(0xFFD32F2F)
 
-val DarkColorScheme = ColorScheme(
-    primary = TextAccent,
-    secondary = TextSecondary,
-    background = BackgroundPrimary,
-    surfaceContainer = BackgroundSecondary,
-    onPrimary = TextPrimary,
-    onSecondary = TextSecondary,
-    onBackground = TextPrimary,
-    onSurface = TextPrimary,
-    onError = LiveMatchRed,
-    outline = DividerColor,
-    tertiaryContainer = IconPrimary,
-    tertiaryDim = IconSecondary,
-    onTertiary = IconAccent
+val WearAppColorPalette: ColorScheme = ColorScheme(
+    primary = heading,
+    primaryDim = subheading,
+    secondary = accent,
+    secondaryDim = light,
+    error = Red400,
+    onPrimary = Color.Black,
+    onSecondary = Color.Black,
+    onError = Color.Black,
+    onBackground = iconBackground
 )
