@@ -1,0 +1,8 @@
+<resources>
+    <string name="hello_world">From the Round world,\nHello, %1$s!</string>
+    <string name="more">More</string>
+    <string name="loading_failed">Failed to load</string>
+    <string name="retry">Retry</string>
+    <string name="refresh">Refresh</string>
+    <string name="loading">Loading</string>
+</resources>
