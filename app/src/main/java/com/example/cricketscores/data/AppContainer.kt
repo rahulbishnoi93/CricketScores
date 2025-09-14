@@ -15,6 +15,7 @@
  */
 package com.example.cricketscores.data
 
+import android.content.Context
 import com.example.cricketscores.network.CricketApiService
 import retrofit2.Retrofit
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -35,7 +36,7 @@ interface AppContainer {
  *
  * Variables are initialized lazily and the same instance is shared across the whole app.
  */
-class DefaultAppContainer : AppContainer {
+class DefaultAppContainer(private val appContext: Context) : AppContainer {
     private val baseUrl = "https://cricket-api-164069476032.asia-south1.run.app/"
     // Custom OkHttpClient with increased timeout
     private val okHttpClient: OkHttpClient = OkHttpClient.Builder()
@@ -60,9 +61,17 @@ class DefaultAppContainer : AppContainer {
     }
 
     /**
-     * DI implementation for Mars photos repository
+     * PhoneDataClient instance that will be used to request data from phone when watch is offline.
      */
+    private val phoneDataClient: PhoneDataClient by lazy {
+        PhoneDataClient(appContext)
+    }
+
     override val cricketMatchesRepository: CricketMatchesRepository by lazy {
-        NetworkCricketMatchesRepository(retrofitService)
+        NetworkCricketMatchesRepository(
+            cricketApiService = retrofitService,
+            appContext = appContext,
+            phoneDataClient = phoneDataClient
+        )
     }
 }

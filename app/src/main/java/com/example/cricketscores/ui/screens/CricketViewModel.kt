@@ -38,7 +38,6 @@ import com.example.cricketscores.model.RecentMatch
 import com.example.cricketscores.model.ScheduleMatch
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -100,17 +99,20 @@ class CricketViewModel(
     fun loadHomeData() {
         viewModelScope.launch {
             // Check for network connectivity before making the call
-            if (!networkStateChecker.isOnline()) {
-                Log.e("CricketViewModel", "No internet connection available")
-                cricketUiState = CricketUiState.Error("No internet connection available")
-                return@launch
-            }
+//            if (!networkStateChecker.isOnline()) {
+//                Log.e("CricketViewModel", "No internet connection available")
+//                cricketUiState = CricketUiState.Error("No internet connection available")
+//                return@launch
+//            }
             cricketUiState = CricketUiState.Loading
             cricketUiState = try {
                 val liveDeferred = async { runCatching { cricketMatchesRepository.getLiveMatches() }.getOrElse { e -> Log.e("CricketViewModel", "Error fetching live matches", e) } }
                 val recentDeferred = async { runCatching { cricketMatchesRepository.getRecentMatches()}.getOrElse { e -> Log.e("CricketViewModel", "Error fetching recent matches", e)} }
                 val scheduleDeferred = async { runCatching { cricketMatchesRepository.getSchedule()}.getOrElse { e -> Log.e("CricketViewModel", "Error fetching schedule matches", e)} }
-                val (live, recent, schedule) = awaitAll(liveDeferred, recentDeferred, scheduleDeferred)
+                val live = liveDeferred.await()
+                val recent = recentDeferred.await()
+                val schedule = scheduleDeferred.await()
+                //val (live, recent, schedule) = awaitAll(liveDeferred, recentDeferred, scheduleDeferred)
                 CricketUiState.Success(
                     liveMatches = live as List<LiveMatch>,
                     recentMatches = recent as List<RecentMatch>,
@@ -131,12 +133,12 @@ class CricketViewModel(
 
     fun getMatchDetails(id: String) {
         viewModelScope.launch {
-            // Check for network connectivity before making the call
-            if (!networkStateChecker.isOnline()) {
-                Log.e("CricketViewModel", "No internet connection available")
-                currentMatchDetails = MatchDetailUiState.Error("No internet connection available")
-                return@launch
-            }
+            // Check for network connectivity before making the call --- REMOVE THIS!!!!
+//            if (!networkStateChecker.isOnline()) {
+//                Log.e("CricketViewModel", "No internet connection available")
+//                currentMatchDetails = MatchDetailUiState.Error("No internet connection available")
+//                return@launch
+//            }
 
 
             currentMatchDetails = MatchDetailUiState.Loading
