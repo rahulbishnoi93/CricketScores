@@ -53,14 +53,14 @@ class NetworkCricketMatchesRepository(
                 cricketApiService.getLiveMatches()
             } else {
                 // fallback to phone
-                val resp = phoneDataClient.requestFromPhone("/get_live")
+                val resp = phoneDataClient.requestFromPhone("/cric_scores/get_live")
                 Log.d(TAG, "getLiveMatches fallback: $resp")
                 if (resp != null) json.decodeFromString(resp) else emptyList()
             }
         } catch (t: Throwable) {
             Log.e(TAG, "getLiveMatches failed: ${t.message}", t)
             // as a last resort try phone
-                val resp = phoneDataClient.requestFromPhone("/get_live")
+                val resp = phoneDataClient.requestFromPhone("/cric_scores/get_live")
                 Log.d(TAG, "getLiveMatches fallback: $resp")
                 if (resp != null) json.decodeFromString(resp) else emptyList()
         }
@@ -71,13 +71,13 @@ class NetworkCricketMatchesRepository(
             if (hasNetwork()) {
                 cricketApiService.getRecentMatches()
             } else {
-                val resp = phoneDataClient.requestFromPhone("/get_recent")
+                val resp = phoneDataClient.requestFromPhone("/cric_scores/get_recent")
                 Log.d(TAG, "getRecentMatches fallback: $resp")
                 if (resp != null) json.decodeFromString(resp) else emptyList()
             }
         } catch (t: Throwable) {
             Log.e(TAG, "getRecentMatches failed", t)
-                val resp = phoneDataClient.requestFromPhone("/get_recent")
+                val resp = phoneDataClient.requestFromPhone("/cric_scores/get_recent")
                 if (resp != null) json.decodeFromString(resp) else emptyList()
         }
     }
@@ -87,13 +87,13 @@ class NetworkCricketMatchesRepository(
             if (hasNetwork()) {
                 cricketApiService.getSchedule()
             } else {
-                val resp = phoneDataClient.requestFromPhone("/get_schedule")
+                val resp = phoneDataClient.requestFromPhone("/cric_scores/get_schedule")
                 Log.d(TAG, "getSchedule fallback: $resp")
                 if (resp != null) json.decodeFromString(resp) else emptyList()
             }
         } catch (t: Throwable) {
             Log.e(TAG, "getSchedule failed", t)
-                val resp = phoneDataClient.requestFromPhone("/get_schedule")
+                val resp = phoneDataClient.requestFromPhone("/cric_scores/get_schedule")
                 if (resp != null) json.decodeFromString(resp) else emptyList()
         }
     }
@@ -103,12 +103,12 @@ class NetworkCricketMatchesRepository(
             if (hasNetwork()) {
                 cricketApiService.getMatchDetails(id)
             } else {
-                val resp = phoneDataClient.requestFromPhone("/get_match_details/$id")
+                val resp = phoneDataClient.requestFromPhone("/cric_scores/get_match_details/$id")
                 if (resp != null) json.decodeFromString(resp) else MatchDetails()
             }
         } catch (t: Throwable) {
             Log.e(TAG, "getMatchDetails failed", t)
-                val resp = phoneDataClient.requestFromPhone("/get_match_details/$id")
+                val resp = phoneDataClient.requestFromPhone("/cric_scores/get_match_details/$id")
                 if (resp != null) json.decodeFromString(resp) else MatchDetails()
         }
     }

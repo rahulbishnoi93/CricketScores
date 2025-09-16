@@ -24,13 +24,13 @@ class PhoneDataClient(private val context: Context) {
      *
      * Returns the raw String pushed by the phone or null on timeout / failure.
      */
-    suspend fun requestFromPhone(requestPath: String, timeoutMs: Long = 30000L): String? {
+    suspend fun requestFromPhone(requestPath: String, timeoutMs: Long = 8000L): String? {
         val messageClient = Wearable.getMessageClient(context)
         val responseDeferred = CompletableDeferred<String?>()
 
         val listener = MessageClient.OnMessageReceivedListener { event: MessageEvent ->
             // Phone replies with "/response"
-            if (event.path == "/response$requestPath") {
+            if (event.path == "$requestPath") {
                 try {
                     val payload = String(event.data ?: byteArrayOf())
                     Log.d(TAG, "Got response from phone: ${payload.take(120)}")
