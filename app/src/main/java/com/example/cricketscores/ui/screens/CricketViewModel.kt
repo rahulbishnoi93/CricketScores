@@ -94,8 +94,30 @@ class CricketViewModel(
         private set
 
 
-    init { loadHomeData() }
+    init { loadHomeDataAll() }
 
+    fun loadHomeDataAll() {
+        viewModelScope.launch {
+            cricketUiState = CricketUiState.Loading
+            cricketUiState = try {
+                val allMatches = cricketMatchesRepository.getAllMatches()
+                CricketUiState.Success(
+                    liveMatches = allMatches.live_matches,
+                    recentMatches = allMatches.recent_matches,
+                    schedule = allMatches.upcoming_matches
+                )
+            } catch (e: IOException) {
+                Log.e("CricketViewModel", "Network error", e)
+                CricketUiState.Error("Network error occurred")
+            } catch (e: HttpException) {
+                Log.e("CricketViewModel", "HTTP error", e)
+                CricketUiState.Error("HTTP error occurred")
+            } catch (e: Exception) {
+                Log.e("CricketViewModel", "Unknown error", e)
+                CricketUiState.Error("An unknown error occurred")
+            }
+        }
+    }
     fun loadHomeData() {
         viewModelScope.launch {
             // Check for network connectivity before making the call

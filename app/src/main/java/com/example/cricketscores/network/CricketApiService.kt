@@ -16,6 +16,7 @@
 
 package com.example.cricketscores.network
 
+import com.example.cricketscores.model.AllMatches
 import com.example.cricketscores.model.LiveMatch
 import com.example.cricketscores.model.MatchDetails
 import com.example.cricketscores.model.RecentMatch
@@ -23,15 +24,9 @@ import com.example.cricketscores.model.ScheduleMatch
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-/**
- * A public interface that exposes the [getPhotos] method
- */
+
 interface CricketApiService {
-    /**
-     * Returns a [List] of [MarsPhoto] and this method can be called from a Coroutine.
-     * The @GET annotation indicates that the "photos" endpoint will be requested with the GET
-     * HTTP method
-     */
+
     @GET("live")
     suspend fun getLiveMatches(): List<LiveMatch>
 
@@ -43,4 +38,7 @@ interface CricketApiService {
 
     @GET("match/{id}")
     suspend fun getMatchDetails(@Path("id") id: String): MatchDetails
+
+    @GET("allMatches")
+    suspend fun getAllMatches(): AllMatches
 }

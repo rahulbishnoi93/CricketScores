@@ -12,6 +12,8 @@ import kotlinx.serialization.json.Json
  * Repository interface (unchanged).
  */
 interface CricketMatchesRepository {
+
+    suspend fun getAllMatches(): AllMatches
     suspend fun getLiveMatches(): List<LiveMatch>
     suspend fun getRecentMatches(): List<RecentMatch>
     suspend fun getSchedule(): List<ScheduleMatch>
@@ -43,6 +45,22 @@ class NetworkCricketMatchesRepository(
         } catch (t: Throwable) {
             Log.e(TAG, "hasNetwork check failed", t)
             return false
+        }
+    }
+
+    override suspend fun getAllMatches(): AllMatches {
+        return try {
+            if (hasNetwork()) {
+                cricketApiService.getAllMatches()
+            } else {
+                val resp = phoneDataClient.requestFromPhone("/cric_scores/get_all_matches")
+                Log.d(TAG, "getAllMatches fallback: $resp")
+                if (resp != null) json.decodeFromString(resp) else AllMatches(emptyList(), emptyList(), emptyList())
+            }
+        } catch (t: Throwable) {
+            Log.e(TAG, "getAllMatches failed: ${t.message}", t)
+            val resp = phoneDataClient.requestFromPhone("/cric_scores/get_all_matches")
+            if (resp != null) json.decodeFromString(resp) else AllMatches(emptyList(), emptyList(), emptyList())
         }
     }
 
