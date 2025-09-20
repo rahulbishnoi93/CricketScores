@@ -6,14 +6,14 @@ plugins {
 }
 
 android {
-    namespace = "com.example.cricketscorecompanion"
+    namespace = "com.neox.cricketscorecompanion"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.cricketscores"
+        applicationId = "com.neox.cricketscores"
         minSdk = 26  // Minimum for Wear OS 2.0
         targetSdk = 36
-        versionCode = 341000101
+        versionCode = 341000107
         versionName = "1.0"
         
         // Required for Wear OS Data Layer

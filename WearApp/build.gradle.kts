@@ -6,14 +6,14 @@ plugins {
 }
 
 android {
-    namespace = "com.example.cricketscores"
+    namespace = "com.neox.cricketscores"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.cricketscores"
+        applicationId = "com.neox.cricketscores"
         minSdk = 30
         targetSdk = 36
-        versionCode = 341000100
+        versionCode = 341000106
         versionName = "1.0"
 
     }
@@ -30,11 +30,13 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+   }
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+        }
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-    useLibrary("wear-sdk")
+    //useLibrary("wear-sdk")
     buildFeatures {
         compose = true
     }
